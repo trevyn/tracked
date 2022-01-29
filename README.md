@@ -14,6 +14,6 @@ fn main() -> Result<()> {
 }
 ```
 
-```ignore
+```text
 Error: NoneError at src/main.rs:9:16
 ```
