@@ -1,6 +1,6 @@
 Another way of spelling `anyhow`, with some extra features.
 
-```rust
+```rust,no_run
 use tracked::{tracked, Result};
 
 fn f() -> Option<()> {
@@ -14,6 +14,6 @@ fn main() -> Result<()> {
 }
 ```
 
-```
+```ignore
 Error: NoneError at src/main.rs:9:16
 ```
