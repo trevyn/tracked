@@ -1,0 +1,16 @@
+[package]
+authors = ["The tracked-impl authors"]
+description = "Internal implementation details for Tracked."
+edition = "2021"
+license = "MIT OR Apache-2.0 OR CC0-1.0"
+name = "tracked-impl"
+repository = "https://github.com/trevyn/tracked"
+rust-version = "1.56"
+version = "0.1.0"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1"
+syn = {version = "1.0.12", features = ["full", "visit-mut"]}

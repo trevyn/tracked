@@ -1,0 +1,14 @@
+[package]
+authors = ["The tracked authors"]
+description = "Another way of spelling `anyhow`, with some extra features."
+documentation = "https://docs.rs/tracked"
+edition = "2021"
+license = "MIT OR Apache-2.0 OR CC0-1.0"
+name = "tracked"
+repository = "https://github.com/trevyn/tracked"
+rust-version = "1.56"
+version = "0.1.0"
+
+[dependencies]
+anyhow = "1"
+tracked-impl = {path = "../tracked-impl", version = "=0.1.0"}

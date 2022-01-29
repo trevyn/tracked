@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  schedule: [cron: '40 1 * * *']
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  checklinks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: trevyn/lychee-action@v1
+        id: lychee
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: --verbose --no-progress --headers="accept=text/html" "**/*.md" "**/*.rs" "**/*.json" "**/*.toml" "**/*.yml"
+
+      - name: Fail if there were link-check errors
+        run: exit ${{ steps.lychee.outputs.exit_code }}
+
+  test:
+    name: test rust ${{ matrix.rust }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [1.56, stable, beta, nightly]
+#              1.56 is minimum rust-version
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: ${{ matrix.rust }}
+      
+      - name: cargo test tracked-impl
+        run: cargo test -- --nocapture
+        working-directory: 'tracked-impl'
+
+      - name: cargo test tracked
+        run: cargo test -- --nocapture
+        working-directory: 'tracked'
+
+      - run: cargo doc --no-deps
+
+  publish:
+    needs: [checklinks, test]
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, 'tracked@') && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: hecrj/setup-rust-action@v1
+        with:
+          rust-version: stable
+
+      - name: cargo publish tracked-impl
+        run: cargo publish --no-verify --allow-dirty --token ${{ secrets.CARGO_TOKEN }}
+        working-directory: 'tracked-impl'
+
+      - name: cargo publish tracked
+        run: cargo publish --no-verify --allow-dirty --token ${{ secrets.CARGO_TOKEN }}
+        working-directory: 'tracked'
