@@ -29,5 +29,9 @@ pub fn tracked(
 ) -> proc_macro::TokenStream {
  let mut new_fn = syn::parse_macro_input!(input as syn::ItemFn);
  TrackReplace.visit_block_mut(&mut new_fn.block);
- quote!( #new_fn ).into()
+ quote! {
+  #[allow(clippy::needless_question_mark)]
+  #new_fn
+ }
+ .into()
 }
