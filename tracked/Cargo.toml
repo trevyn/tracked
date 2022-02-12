@@ -11,8 +11,4 @@ version = "0.1.0"
 
 [dependencies]
 anyhow = "1"
-todo-or-die = {version = "0.1", features = ["github"], optional = true}
 tracked-impl = {path = "../tracked-impl", version = "=0.1.0"}
-
-[features]
-test = ["todo-or-die"]
