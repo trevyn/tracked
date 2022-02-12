@@ -11,4 +11,5 @@ version = "0.1.0"
 
 [dependencies]
 anyhow = "1"
+once_cell = "1"
 tracked-impl = {path = "../tracked-impl", version = "=0.1.0"}
