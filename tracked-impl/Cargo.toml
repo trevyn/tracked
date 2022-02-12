@@ -1,6 +1,6 @@
 [package]
-authors = ["The tracked-impl authors"]
-description = "Internal implementation details for Tracked."
+authors = ["The authors"]
+description = "Internal implementation details for `tracked`."
 edition = "2021"
 license = "MIT OR Apache-2.0 OR CC0-1.0"
 name = "tracked-impl"

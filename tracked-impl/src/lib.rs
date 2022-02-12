@@ -1,4 +1,4 @@
-//! This crate provides Tracked's procedural macro.
+//! This crate provides `tracked`'s procedural macro.
 //!
 //! Please refer to the `tracked` crate for details.
 
@@ -29,6 +29,9 @@ pub fn tracked(
 ) -> proc_macro::TokenStream {
  let mut new_fn = syn::parse_macro_input!(input as syn::ItemFn);
  TrackReplace.visit_block_mut(&mut new_fn.block);
+ #[cfg(feature = "todo-or-die")]
+ // #[allow(clippy::needless_question_mark)] should be on expression instead of whole fn
+ todo_or_die::issue_closed!("rust-lang", "rust", 15701);
  let output = quote! {
   #[allow(clippy::needless_question_mark)]
   #new_fn

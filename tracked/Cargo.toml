@@ -1,5 +1,5 @@
 [package]
-authors = ["The tracked authors"]
+authors = ["The authors"]
 description = "Another way of spelling `anyhow`, with some extra features."
 documentation = "https://docs.rs/tracked"
 edition = "2021"
@@ -11,4 +11,8 @@ version = "0.1.0"
 
 [dependencies]
 anyhow = "1"
+todo-or-die = {version = "0.1", features = ["github"], optional = true}
 tracked-impl = {path = "../tracked-impl", version = "=0.1.0"}
+
+[features]
+test = ["todo-or-die"]
