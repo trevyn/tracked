@@ -9,8 +9,9 @@ use std::sync::Mutex;
 
 static BUILD_ID: Lazy<Mutex<String>> = Lazy::new(Default::default);
 
-pub fn set_build_id(s: impl Into<String>) {
- let mut s = s.into();
+/// Call this once at startup to include an identifying string in reported errors.
+pub fn set_build_id(build_id: impl Into<String>) {
+ let mut s = build_id.into();
  s.push('/');
  *BUILD_ID.lock().unwrap() = s;
 }
