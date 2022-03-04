@@ -41,7 +41,7 @@ jobs:
           rust-version: ${{ matrix.rust }}
       
       - name: cargo test tracked-impl
-        run: cargo test --features "test" -- --nocapture
+        run: cargo test -- --nocapture
         working-directory: 'tracked-impl'
 
       - name: cargo test tracked

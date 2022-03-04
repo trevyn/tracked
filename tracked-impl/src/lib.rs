@@ -29,7 +29,7 @@ pub fn tracked(
 ) -> proc_macro::TokenStream {
  let mut new_fn = syn::parse_macro_input!(input as syn::ItemFn);
  TrackReplace.visit_block_mut(&mut new_fn.block);
- #[cfg(feature = "todo-or-die")]
+ #[cfg(test)]
  // #[allow(clippy::needless_question_mark)] should be on expression instead of whole fn
  todo_or_die::issue_closed!("rust-lang", "rust", 15701);
  let output = quote! {
