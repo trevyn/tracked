@@ -4,6 +4,28 @@
 pub use anyhow::*;
 pub use tracked_impl::tracked;
 
+pub struct StringError(String);
+
+impl std::fmt::Display for StringError {
+ fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+  write!(f, "{}", self.0)
+ }
+}
+
+impl std::fmt::Debug for StringError {
+ fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+  write!(f, "{}", self.0)
+ }
+}
+
+impl From<String> for StringError {
+ fn from(s: String) -> Self {
+  Self(s)
+ }
+}
+
+impl std::error::Error for StringError {}
+
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
@@ -18,23 +40,20 @@ pub fn set_build_id(build_id: impl Into<String>) {
 
 /// Provides the `t` ("track") method for `Option` and `Result`.
 pub trait Track<T, E>: private::Sealed {
- fn t(self) -> Result<T, anyhow::Error>;
+ fn t(self) -> Result<T, StringError>;
 }
 
 impl<T> Track<T, core::convert::Infallible> for Option<T> {
  #[track_caller]
- fn t(self) -> Result<T, anyhow::Error> {
+ fn t(self) -> Result<T, StringError> {
   match self {
-   Some(t) => Ok(t),
+   Some(t) => std::result::Result::Ok(t),
    None => {
     let l = std::panic::Location::caller();
-    Err(anyhow::Error::msg(format!(
-     "NoneError at {}{}:{}:{}",
-     BUILD_ID.lock().unwrap(),
-     l.file(),
-     l.line(),
-     l.column()
-    )))
+    Err(
+     format!("NoneError at {}{}:{}:{}", BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
+      .into(),
+    )
    }
   }
  }
@@ -45,23 +64,19 @@ where
  E: std::error::Error + Send + Sync + 'static,
 {
  #[track_caller]
- fn t(self) -> Result<T, anyhow::Error>
+ fn t(self) -> Result<T, StringError>
  where
   E: std::error::Error + Send + Sync + 'static,
  {
   match self {
-   std::result::Result::Ok(t) => Ok(t),
+   std::result::Result::Ok(t) => std::result::Result::Ok(t),
    Err(e) => {
     let l = std::panic::Location::caller();
     let msg = e.to_string();
-    Err(anyhow::Error::new(e).context(format!(
-     "{} at {}{}:{}:{}",
-     msg,
-     BUILD_ID.lock().unwrap(),
-     l.file(),
-     l.line(),
-     l.column()
-    )))
+    Err(
+     format!("{} at {}{}:{}:{}", msg, BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
+      .into(),
+    )
    }
   }
  }
@@ -69,20 +84,16 @@ where
 
 impl<T> Track<T, core::convert::Infallible> for Result<T> {
  #[track_caller]
- fn t(self) -> Result<T, anyhow::Error> {
+ fn t(self) -> Result<T, StringError> {
   match self {
-   std::result::Result::Ok(t) => Ok(t),
+   std::result::Result::Ok(t) => std::result::Result::Ok(t),
    Err(e) => {
     let l = std::panic::Location::caller();
     let msg = e.to_string();
-    Err(e.context(format!(
-     "{} at {}{}:{}:{}",
-     msg,
-     BUILD_ID.lock().unwrap(),
-     l.file(),
-     l.line(),
-     l.column()
-    )))
+    Err(
+     format!("{} at {}{}:{}:{}", msg, BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
+      .into(),
+    )
    }
   }
  }
