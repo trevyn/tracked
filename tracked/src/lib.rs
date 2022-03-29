@@ -4,6 +4,9 @@
 pub use anyhow::*;
 pub use tracked_impl::tracked;
 
+use once_cell::sync::Lazy;
+use std::sync::Mutex;
+
 pub struct StringError(String);
 
 impl std::fmt::Display for StringError {
@@ -24,10 +27,13 @@ impl From<String> for StringError {
  }
 }
 
-impl std::error::Error for StringError {}
+impl From<StringError> for String {
+ fn from(e: StringError) -> Self {
+  e.0
+ }
+}
 
-use once_cell::sync::Lazy;
-use std::sync::Mutex;
+impl std::error::Error for StringError {}
 
 static BUILD_ID: Lazy<Mutex<String>> = Lazy::new(Default::default);
 
@@ -61,12 +67,12 @@ impl<T> Track<T, core::convert::Infallible> for Option<T> {
 
 impl<T, E> Track<T, E> for Result<T, E>
 where
- E: std::error::Error + Send + Sync + 'static,
+ E: ToString,
 {
  #[track_caller]
  fn t(self) -> Result<T, StringError>
  where
-  E: std::error::Error + Send + Sync + 'static,
+  E: ToString,
  {
   match self {
    std::result::Result::Ok(t) => std::result::Result::Ok(t),
@@ -82,22 +88,22 @@ where
  }
 }
 
-impl<T> Track<T, core::convert::Infallible> for Result<T> {
- #[track_caller]
- fn t(self) -> Result<T, StringError> {
-  match self {
-   std::result::Result::Ok(t) => std::result::Result::Ok(t),
-   Err(e) => {
-    let l = std::panic::Location::caller();
-    let msg = e.to_string();
-    Err(
-     format!("{} at {}{}:{}:{}", msg, BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
-      .into(),
-    )
-   }
-  }
- }
-}
+// impl<T> Track<T, core::convert::Infallible> for Result<T> {
+//  #[track_caller]
+//  fn t(self) -> Result<T, StringError> {
+//   match self {
+//    std::result::Result::Ok(t) => std::result::Result::Ok(t),
+//    Err(e) => {
+//     let l = std::panic::Location::caller();
+//     let msg = e.to_string();
+//     Err(
+//      format!("{} at {}{}:{}:{}", msg, BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
+//       .into(),
+//     )
+//    }
+//   }
+//  }
+// }
 
 pub(crate) mod private {
  pub trait Sealed {}
