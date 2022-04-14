@@ -7,6 +7,7 @@ pub use tracked_impl::tracked;
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct StringError(String);
 
 impl std::fmt::Display for StringError {
