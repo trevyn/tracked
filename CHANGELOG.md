@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.1] - 2022-04-14
+
+- `StringError` is now `Serialize`/`Deserialize`/`Clone`.
+
 ## [0.2.0] - 2022-03-29
 
 - `Track` returns `StringError` now.
