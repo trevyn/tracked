@@ -18,6 +18,15 @@ impl VisitMut for TrackReplace {
   *node.expr = parse_quote_spanned!(span => tracked::Track::t( #expr ));
   visit_mut::visit_expr_try_mut(self, node);
  }
+ fn visit_macro_mut(&mut self, node: &mut syn::Macro) {
+  if let Ok(mut body) = node.parse_body_with(syn::Block::parse_within) {
+   for stmt in &mut body {
+    TrackReplace.visit_stmt_mut(stmt);
+   }
+   node.tokens = quote!( #(#body)* );
+  }
+  visit_mut::visit_macro_mut(self, node);
+ }
 }
 
 /// Apply this to a `fn` to track line numbers for `?` errors.
