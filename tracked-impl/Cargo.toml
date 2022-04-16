@@ -6,7 +6,7 @@ license = "MIT OR Apache-2.0 OR CC0-1.0"
 name = "tracked-impl"
 repository = "https://github.com/trevyn/tracked"
 rust-version = "1.56"
-version = "0.2.1"
+version = "0.3.0"
 
 [lib]
 proc-macro = true

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.0] - 2022-04-16
+
+- `#[tracked]` will now recurse into macros that successfully parse as statement blocks.
+
 ## [0.2.1] - 2022-04-14
 
 - `StringError` is now `Serialize`/`Deserialize`/`Clone`.
