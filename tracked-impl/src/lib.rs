@@ -19,11 +19,20 @@ impl VisitMut for TrackReplace {
   visit_mut::visit_expr_try_mut(self, node);
  }
  fn visit_macro_mut(&mut self, node: &mut syn::Macro) {
+  // Macros that successfully parse as a block of valid Rust code or a
+  // comma-separated list of expressions are recursed into.
   if let Ok(mut body) = node.parse_body_with(syn::Block::parse_within) {
    for stmt in &mut body {
     TrackReplace.visit_stmt_mut(stmt);
    }
    node.tokens = quote!( #(#body)* );
+  } else if let Ok(mut punctuated) =
+   node.parse_body_with(<syn::punctuated::Punctuated<syn::Expr, syn::Token![,]>>::parse_terminated)
+  {
+   for expr in punctuated.iter_mut() {
+    TrackReplace.visit_expr_mut(expr);
+   }
+   node.tokens = quote!( #punctuated );
   }
   visit_mut::visit_macro_mut(self, node);
  }
