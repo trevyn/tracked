@@ -1,13 +1,13 @@
 #![forbid(unsafe_code)]
 #![doc = include_str!("../README.md")]
 
-pub use anyhow::*;
 pub use tracked_impl::tracked;
 
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
-#[derive(Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct StringError(String);
 
 impl std::fmt::Display for StringError {
@@ -54,14 +54,10 @@ impl<T> Track<T, core::convert::Infallible> for Option<T> {
  #[track_caller]
  fn t(self) -> Result<T, StringError> {
   match self {
-   Some(t) => std::result::Result::Ok(t),
-   None => {
-    let l = std::panic::Location::caller();
-    Err(
-     format!("NoneError at {}{}:{}:{}", BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
-      .into(),
-    )
-   }
+   Some(t) => Ok(t),
+   None => Err(
+    format!("NoneError at {}{}", BUILD_ID.lock().unwrap(), std::panic::Location::caller()).into(),
+   ),
   }
  }
 }
@@ -71,20 +67,13 @@ where
  E: ToString,
 {
  #[track_caller]
- fn t(self) -> Result<T, StringError>
- where
-  E: ToString,
- {
+ fn t(self) -> Result<T, StringError> {
   match self {
-   std::result::Result::Ok(t) => std::result::Result::Ok(t),
-   Err(e) => {
-    let l = std::panic::Location::caller();
-    let msg = e.to_string();
-    Err(
-     format!("{} at {}{}:{}:{}", msg, BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
-      .into(),
-    )
-   }
+   Ok(t) => Ok(t),
+   Err(e) => Err(
+    format!("{} at {}{}", e.to_string(), BUILD_ID.lock().unwrap(), std::panic::Location::caller())
+     .into(),
+   ),
   }
  }
 }

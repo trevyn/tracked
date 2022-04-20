@@ -1,11 +1,11 @@
-use tracked::{tracked, Result};
+use tracked::tracked;
 
 fn f() -> Option<()> {
  None
 }
 
 #[tracked]
-fn main() -> Result<()> {
+fn main() -> Result<(), tracked::StringError> {
  let _ = f()?;
  Ok(())
 }

@@ -1,6 +1,6 @@
 [package]
 authors = ["The authors"]
-description = "Another way of spelling `anyhow`, with some extra features."
+description = "A stringly-typed Error that includes `#[track_caller]` information."
 documentation = "https://docs.rs/tracked"
 edition = "2021"
 license = "MIT OR Apache-2.0 OR CC0-1.0"
@@ -10,7 +10,9 @@ rust-version = "1.56"
 version = "0.4.0"
 
 [dependencies]
-anyhow = "1.0.3"
 once_cell = "1"
-serde = {version = "1.0", features = ["derive"]}
+serde = {version = "1.0", features = ["derive"], optional = true}
 tracked-impl = {path = "../tracked-impl", version = "=0.4.0"}
+
+[features]
+default = ["serde"]
