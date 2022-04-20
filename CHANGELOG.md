@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.0] - 2022-04-20
+
+- Remove `anyhow` and make `serde` optional.
+
 ## [0.4.0] - 2022-04-17
 
 - `#[tracked]` will now recurse into macros that successfully parse as a list of comma-separated expressions.
