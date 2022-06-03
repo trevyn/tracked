@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.1] - 2022-06-03
+
+- `impl From<&str> for StringError`.
+
 ## [0.5.0] - 2022-04-20
 
 - Remove `anyhow` and make `serde` optional.
