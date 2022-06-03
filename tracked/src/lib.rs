@@ -78,23 +78,6 @@ where
  }
 }
 
-// impl<T> Track<T, core::convert::Infallible> for Result<T> {
-//  #[track_caller]
-//  fn t(self) -> Result<T, StringError> {
-//   match self {
-//    std::result::Result::Ok(t) => std::result::Result::Ok(t),
-//    Err(e) => {
-//     let l = std::panic::Location::caller();
-//     let msg = e.to_string();
-//     Err(
-//      format!("{} at {}{}:{}:{}", msg, BUILD_ID.lock().unwrap(), l.file(), l.line(), l.column())
-//       .into(),
-//     )
-//    }
-//   }
-//  }
-// }
-
 pub(crate) mod private {
  pub trait Sealed {}
 
