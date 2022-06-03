@@ -28,6 +28,12 @@ impl From<String> for StringError {
  }
 }
 
+impl From<&str> for StringError {
+ fn from(s: &str) -> Self {
+  Self(s.to_string())
+ }
+}
+
 impl From<StringError> for String {
  fn from(e: StringError) -> Self {
   e.0
