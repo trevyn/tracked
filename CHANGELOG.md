@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.2] - 2022-06-03
+
+- Include function name in error message.
+
 ## [0.5.1] - 2022-06-03
 
 - `impl From<&str> for StringError`.
