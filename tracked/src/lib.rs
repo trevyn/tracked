@@ -54,6 +54,7 @@ pub fn set_build_id(build_id: impl Into<String>) {
 /// Provides the `t` ("track") method for `Option` and `Result`.
 pub trait Track<T, E>: private::Sealed {
  fn t(self) -> Result<T, StringError>;
+ fn t_named(self, name: &str) -> Result<T, StringError>;
 }
 
 impl<T> Track<T, core::convert::Infallible> for Option<T> {
@@ -63,6 +64,21 @@ impl<T> Track<T, core::convert::Infallible> for Option<T> {
    Some(t) => Ok(t),
    None => Err(
     format!("NoneError at {}{}", BUILD_ID.lock().unwrap(), std::panic::Location::caller()).into(),
+   ),
+  }
+ }
+ #[track_caller]
+ fn t_named(self, name: &str) -> Result<T, StringError> {
+  match self {
+   Some(t) => Ok(t),
+   None => Err(
+    format!(
+     "NoneError in {} at {}{}",
+     name,
+     BUILD_ID.lock().unwrap(),
+     std::panic::Location::caller()
+    )
+    .into(),
    ),
   }
  }
@@ -79,6 +95,22 @@ where
    Err(e) => Err(
     format!("{} at {}{}", e.to_string(), BUILD_ID.lock().unwrap(), std::panic::Location::caller())
      .into(),
+   ),
+  }
+ }
+ #[track_caller]
+ fn t_named(self, name: &str) -> Result<T, StringError> {
+  match self {
+   Ok(t) => Ok(t),
+   Err(e) => Err(
+    format!(
+     "{} in {} at {}{}",
+     e.to_string(),
+     name,
+     BUILD_ID.lock().unwrap(),
+     std::panic::Location::caller()
+    )
+    .into(),
    ),
   }
  }

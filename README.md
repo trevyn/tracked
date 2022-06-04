@@ -21,5 +21,5 @@ fn main() -> Result<(), tracked::StringError> {
 ```
 
 ```text
-Error: NoneError at src/main.rs:9:16
+Error: NoneError in main at src/main.rs:9:16
 ```
