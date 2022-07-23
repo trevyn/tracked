@@ -31,8 +31,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [1.56, stable, beta, nightly]
-#              1.56 is minimum rust-version
+        rust: ["1.56", stable, beta, nightly]
+#               1.56 is minimum rust-version
     steps:
       - uses: actions/checkout@v2
 
