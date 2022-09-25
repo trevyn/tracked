@@ -3,7 +3,10 @@ name: ci
 on:
   push:
   pull_request:
-  schedule: [cron: '40 1 * * *']
+  schedule: [cron: "40 1 * * *"]
+
+permissions:
+  contents: read
 
 env:
   CARGO_TERM_COLOR: always
@@ -31,22 +34,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: ["1.56", stable, beta, nightly]
-#               1.56 is minimum rust-version
+        rust: ["1.56.1", stable, beta, nightly]
+
     steps:
       - uses: actions/checkout@v2
 
       - uses: hecrj/setup-rust-action@v1
         with:
           rust-version: ${{ matrix.rust }}
-      
+
       - name: cargo test tracked-impl
         run: cargo test -- --nocapture
-        working-directory: 'tracked-impl'
+        working-directory: "tracked-impl"
 
       - name: cargo test tracked
         run: cargo test -- --nocapture
-        working-directory: 'tracked'
+        working-directory: "tracked"
 
       - run: cargo doc --no-deps
 
@@ -64,8 +67,8 @@ jobs:
 
       - name: cargo publish tracked-impl
         run: cargo publish --no-verify --allow-dirty --token ${{ secrets.CARGO_TOKEN }}
-        working-directory: 'tracked-impl'
+        working-directory: "tracked-impl"
 
       - name: cargo publish tracked
         run: cargo publish --no-verify --allow-dirty --token ${{ secrets.CARGO_TOKEN }}
-        working-directory: 'tracked'
+        working-directory: "tracked"
