@@ -44,17 +44,39 @@ impl std::error::Error for StringError {}
 
 static BUILD_ID: Lazy<Mutex<String>> = Lazy::new(Default::default);
 
-/// Call this once at startup to include an identifying string in reported errors.
+/// Optionally call this once at startup to include an identifying string in reported errors.
 pub fn set_build_id(build_id: impl Into<String>) {
  let mut s = build_id.into();
  s.push('/');
  *BUILD_ID.lock().unwrap() = s;
 }
 
-/// Provides the `t` ("track") method for `Option` and `Result`.
+/// Provides the `t` ("track") method for `bool`, `Option`, and `Result`.
 pub trait Track<T, E>: private::Sealed {
  fn t(self) -> Result<T, StringError>;
  fn t_named(self, name: &str) -> Result<T, StringError>;
+}
+
+impl Track<bool, core::convert::Infallible> for bool {
+ #[track_caller]
+ fn t(self) -> Result<bool, StringError> {
+  match self {
+   true => Ok(true),
+   false => {
+    Err(format!("False at {}{}", BUILD_ID.lock().unwrap(), std::panic::Location::caller()).into())
+   }
+  }
+ }
+ #[track_caller]
+ fn t_named(self, name: &str) -> Result<bool, StringError> {
+  match self {
+   true => Ok(true),
+   false => Err(
+    format!("False in {} at {}{}", name, BUILD_ID.lock().unwrap(), std::panic::Location::caller())
+     .into(),
+   ),
+  }
+ }
 }
 
 impl<T> Track<T, core::convert::Infallible> for Option<T> {
@@ -119,6 +141,7 @@ where
 pub(crate) mod private {
  pub trait Sealed {}
 
+ impl Sealed for bool {}
  impl<T> Sealed for Option<T> {}
  impl<T, E> Sealed for Result<T, E> {}
 }

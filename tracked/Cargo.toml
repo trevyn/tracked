@@ -1,5 +1,4 @@
 [package]
-authors = ["The authors"]
 description = "A stringly-typed Error that includes `#[track_caller]` information."
 documentation = "https://docs.rs/tracked"
 edition = "2021"
