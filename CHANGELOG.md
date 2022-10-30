@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.3] - 2022-10-30
+
+- Allow trying bools: `true?` is Ok, `false?` is Err.
+
 ## [0.5.2] - 2022-06-03
 
 - Include function name in error message.
