@@ -15,7 +15,7 @@ jobs:
   checklinks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: trevyn/lychee-action@v1
         id: lychee
@@ -37,11 +37,9 @@ jobs:
         rust: ["1.56.1", stable, beta, nightly]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: hecrj/setup-rust-action@v1
-        with:
-          rust-version: ${{ matrix.rust }}
+      - run: rustup default ${{ matrix.rust }}
 
       - name: cargo test tracked-impl
         run: cargo test -- --nocapture
@@ -59,11 +57,9 @@ jobs:
     if: ${{ startsWith(github.event.head_commit.message, 'tracked@') && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: hecrj/setup-rust-action@v1
-        with:
-          rust-version: stable
+      - run: rustup default stable
 
       - name: cargo publish tracked-impl
         run: cargo publish --no-verify --allow-dirty --token ${{ secrets.CARGO_TOKEN }}
