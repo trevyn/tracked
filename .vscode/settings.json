@@ -1,5 +1,0 @@
-{
- "rust-analyzer.checkOnSave.command": "clippy",
- "editor.tabSize": 1,
- "editor.detectIndentation": false
-}

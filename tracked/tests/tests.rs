@@ -1,4 +1,4 @@
 #[test]
 fn test_str() {
- let _: tracked::StringError = "foo".into();
+	let _: tracked::StringError = "foo".into();
 }
