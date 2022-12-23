@@ -13,5 +13,5 @@ fn main() -> Result<(), tracked::StringError> {
 
 #[test]
 fn run_main() {
-	assert_eq!(format!("{:?}", main()), "Err(NoneError in main at tracked/tests/readme.rs:10:5)");
+	assert_eq!(format!("{:?}", main()), "Err(NoneError in main at tracked/tests/readme.rs:10:8)");
 }
