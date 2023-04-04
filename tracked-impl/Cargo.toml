@@ -12,7 +12,7 @@ proc-macro = true
 
 [dependencies]
 quote = "1"
-syn = {version = "1.0.12", features = ["full", "visit-mut"]}
+syn = {version = "2", features = ["full", "visit-mut"]}
 
 [dev-dependencies]
 todo-or-die = {version = "0.1", features = ["github"]}
