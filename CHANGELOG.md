@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4 - 2023-04-08
+
+- Bump `syn` to 2.
+
 ## 0.5.3 - 2022-10-30
 
 - Allow trying bools: `true?` is Ok, `false?` is Err.
