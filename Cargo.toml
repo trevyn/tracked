@@ -3,3 +3,4 @@ members = [
   "tracked",
   "tracked-impl",
 ]
+resolver = "2"
