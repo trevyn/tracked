@@ -15,4 +15,5 @@ quote = "1"
 syn = {version = "2", features = ["full", "visit-mut"]}
 
 [dev-dependencies]
+log = "=0.4.18" # 0.4.19 is MSRV 1.60
 todo-or-die = {version = "0.1", features = ["github"]}
