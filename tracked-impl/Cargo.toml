@@ -18,4 +18,5 @@ syn = {version = "2", features = ["full", "visit-mut"]}
 log = "=0.4.18" # 0.4.19 is MSRV 1.60
 tokio = "=1.29" # 1.30 is MSRV 1.63
 h2 = "=0.3.20" # 0.3.21 is MSRV 1.63
+chrono = "=0.4.28" # 0.4.29 is MSRV 1.57
 todo-or-die = {version = "0.1", features = ["github"]}
