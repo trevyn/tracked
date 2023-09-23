@@ -51,8 +51,22 @@ jobs:
 
       - run: cargo doc --no-deps
 
+  todo-or-die:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: rustup default nightly && rustup update nightly
+
+      - run: >
+          echo -e "\n[dev-dependencies]\ntodo-or-die = {version = \"0.1\", features = [\"github\"]}\n\n[features]\ntodoordie = []" >> tracked-impl/Cargo.toml
+
+      - run: cargo test --features todoordie -- --nocapture
+        working-directory: "tracked-impl"
+
   publish:
-    needs: [checklinks, test]
+    needs: [checklinks, test, todo-or-die]
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.event.head_commit.message, 'tracked@') && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
